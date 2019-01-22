@@ -1,0 +1,21 @@
+@import "params";
+
+.clr() {
+  clear: both;
+}
+
+.clean() {
+  padding: 0;
+  margin: 0;
+}
+
+.wrapper {
+  .clean;
+  width: 100%;
+  overflow: hidden; //чтобы скрывать элементы,
+  // которые выходит за рамки wrapper
+}
+.block-main {
+  max-width: @block-main;
+  margin: 0 auto;
+}

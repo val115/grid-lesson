@@ -1,0 +1,242 @@
+@import "partials/mixins";
+@import "partials/params";
+
+//========== Блочные элементы ==========
+#grid {
+  margin: 40px 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(100px, 50%));
+  //grid-template-columns: repeat(autu-fill, minmax(5px, 1000px));
+  //grid-template-rows: repeat(2, 50%);
+  grid-gap: 2vw;
+  & > div {
+    font-size: 4vw;
+    padding: .5em;
+    background: gold;
+    text-align: center;
+  }
+}
+@media all and (max-width: 600px) {
+  #grid {
+    grid-template-columns: repeat(autu-fill, minmax(60px, 1fr));
+  }
+}
+//========== Создание шаблона сайта======
+
+#grid2 {
+  display: grid;
+  /* Проименовываем грид области*/
+  grid-template-areas:
+          "nav header header"
+          "nav article ads"
+          "nav footer ads"; //Вы можете указать пустую ячейку,
+  // используя точку (.) или серию точек без пробелов.
+  grid-template-rows: 60px 200px 60px;
+  grid-template-columns: 20% 1fr 15%;
+  grid-gap: 10px;
+  height: 100vh;
+  //margin: 0;
+
+  & .pageHeader {
+    grid-area: header;
+  }
+  & .pageFooter {
+    grid-area: footer;
+  }
+  & .mainArticle {
+    grid-area: article;
+  }
+  & .mainNav {
+    grid-area: nav;
+  }
+  & .siteAds {
+    grid-area: ads;
+  }
+}
+//======== Для малых экранов ==============
+
+@media all and (max-width: 600px) {
+  #grid2 {
+    grid-template-areas:
+            "header"
+            "article"
+            "ads"
+            "nav"
+            "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: 50px 1fr 50px 1fr 40px;
+  }
+}
+@media all and (max-width: 500px) {
+  #grid2 {
+    display: block;
+  }
+}
+
+
+//======== Растановка Элементов ====
+#grid3 {
+  margin-top: -150px;
+  display: grid;
+  grid-template-rows: 50px 10% 80px;
+  grid-template-columns: 120px 1fr 280px;
+  grid-gap: 5px;
+  height: 90vh;
+  & > div {
+    background-color: #66cc00;
+  }
+  & #item1 {
+    //На самом деле, нам не нужно было указывать любое
+    // позиционирование для первого грид элемента,
+    // так как он находится на определенной позиции,
+    // то он был бы в любом случае. Но если бы мы не
+    // указали позиционирование для второго элемента,
+    // то он бы находился сразу за первым элементом
+    // занимая только 1 трек.
+
+    //grid-row-start: 1;
+    //grid-column-start: 1;
+    //grid-row-end: 2;
+    //grid-column-end: 2;
+    //По-дефолту, если вы не указываете конечную линию,
+    // то элемент охватит только один трек.
+  }
+  & #item2 {
+    grid-row-start: 3;
+    grid-column-start: 3;
+    //grid-row-end: 4;
+    //grid-column-end: 4;
+  }
+
+}
+
+//=======================
+//Вы также можете использовать grid-auto-flow свойство,
+// которое упоминалось в главе перед этой.
+// Оно указывает как автоматически размещенные grid элементы
+// должны помещаться в гриде. Автоматически размещенные
+// элементы это те, которые не явно размещены с использованием
+// любого свойства выше.
+
+//========== Вложенный грид ============
+//Чтобы создать такой вложенный грид, все что вам нужно сделать
+//  — это применить display: grid (или display: inline-grid)
+// к грид элементу и он сам станет гридом.
+// Вы также можете использовать display: subgrid для создания подгрида.
+
+#outer-grid {
+  margin-top: -250px;
+  display: grid;
+  grid-template-rows: 100px 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: column;
+  grid-gap: 8px;
+
+   & > div {
+    background-color: limegreen;
+    color: white;
+    font-size: 4vw;
+    padding: 8px;
+  }
+  & #inner-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+    & > div {
+      background: lightgreen;
+      padding: 8px;
+    }
+  }
+}
+
+//Большинство грид свойств не наследуются, что означает то,
+// что ваш вложенный грид не будет наследовать значения своего
+// родительского грида. Это позволяет вам делать вносить изменения
+// в родительский грид, без непреднамеренного влияния на вложенный грид.
+//
+//Для примера, вы выставили grid-auto-flow: column на родительском гриде,
+// но вы не выставили свойство на вложенный грид. В этом случае,
+// вложенному гриду будет выставлено значение row, потому что это
+// изначальное значение для этого свойства.
+
+//============================================
+//<!--========== Подгриды  display: subgrid. ==========-->
+ul {
+  display: grid;
+  grid: auto-flow / auto 1fr;
+  list-style: none;
+  & li {
+    display: subgrid;
+    grid-column: span 2;
+    margin: 0.5em;
+    border: solid;
+    padding: 0.5em;
+
+     & label {
+      grid-column: 1;
+    }
+    & input {
+      grid-column: 2;
+    }
+  }
+}
+
+//========== Формы с авто-размещением ==========
+//Вы автоматически можете добавлять новые элементы формы
+// и они будут автоматически подстроены под друие,
+// так как они будут размещены в явном гриде.
+//мы сделали саму форму гридом
+.myForm {
+  margin-bottom: 50px;
+  display: grid;
+  //grid-template-columns: auto  1fr;
+  grid-template-columns: [labels] auto [controls] 1fr;
+  //указали, чтоlabels идут в одну колонку, а controls в другую.
+  grid-auto-flow: row;
+  grid-gap: .8em;
+  background: beige;
+  padding: 1.2em;
+
+  & > label {
+    grid-column: labels;
+    grid-row: auto;
+  }
+  & > input, & > textarea {
+    grid-column: controls;
+    grid-row: auto;
+  }
+  & > button {
+    grid-column: span 2;
+  }
+}
+
+//=========== еще один пример =========
+
+.myForm2 {
+  display: grid;
+  grid-template-columns: [labels] auto [controls] 1fr;
+  grid-auto-flow: row;
+  grid-gap: .8em;
+  background: beige;
+  padding: 1.2em;
+
+  & > label, & > fieldset {
+    grid-column: labels;
+    grid-row: auto;
+  }
+  & > input, & > select, & > textarea {
+    grid-column: controls;
+    grid-row: auto;
+    padding: .4em;
+    border: 0;
+  }
+  & > fieldset, & > button {
+    grid-column: span 2;
+  }
+  & > button {
+    padding: 1em;
+    background: darkkhaki;
+    border: 0;
+    color: white;
+  }
+}
